@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Visão Geral</h1>
+  <h3>Listagem de pessoas</h3>
+
+  <div id="status">Carregando...</div>
+  <div id="lista">
+    <!-- Lista de pessoas será inserida aqui -->
+  </div>
+
+  <div>
+    <button id="botao" onclick="mostrarFormulario()">
+      ➕ Adicionar Pessoa
+    </button>
+  </div>
+
+  <center>
+    <form id="formulario" style="display: none" onsubmit="adicionarPessoas(event)">
+      <label>Nome:</label>
+      <input type="text" id="nome" name="nome" required />
+
+      <label>Login:</label>
+      <input type="text" id="login" name="login" required />
+
+      <label>Senha:</label>
+      <input type="password" id="senha" name="senha" required />
+
+      <button id="criar" onclick="adicionarPessoas()" type="submit">Criar conta</button>
+    </form>
+  </center>
+
+  <script>
+    async function carregarPessoas() {
+      const response = await fetch("/pessoas");
+
+      const elemento = document.getElementById("status");
+      if (!response.ok) {
+        elemento.textContent = "Não foi possível carregar as pessoas.";
+      }
+      elemento.textContent = "Pessoas carregadas com sucesso!";
+
+      const pessoas = await response.json();
+
+      const container = document.getElementById("lista");
+      const ul = document.createElement("ul");
+
+      for (let c = 0; c < pessoas.length; c++) {
+        const pessoa = pessoas[c];
+        const texto = `NOME: ${pessoa.nome}  -- ${pessoa.login}`;
+
+        const li = document.createElement("li");
+        li.textContent = texto;
+        ul.appendChild(li);
+      }
+      container.appendChild(ul);
+    }
+    carregarPessoas();
+
+    function mostrarFormulario() {
+      const formulario = document.getElementById("formulario");
+      const botao = document.getElementById("botao");
+      if (formulario.style.display == "none") {
+        formulario.style.display = "block";
+        botao.innerText = "❌Ocultar Formulário";
+      } else {
+        formulario.style.display = "none";
+        botao.innerText = "➕ Adicionar Pessoa";
+      }
+    }
+
+    function adicionarPessoas(event) {
+      event.preventDefault();
+
+      const nome = document.getElementById("nome").value.trim();
+      const login = document.getElementById("login").value.trim();
+      const senha = document.getElementById("senha").value;
+
+      if (!nome || !login || !senha) {
+        alert("Preencha todos os campos!");
+        return;
+      }
+
+      const novaPessoa = { nome, login };
+      adicionarPessoaNaLista(novaPessoa);
+
+      document.getElementById("formulario").reset();
+      document.getElementById("formulario").style.display = "none";
+      document.getElementById("botao").innerText = "➕ Adicionar Pessoa";
+    }
+
+    function adicionarPessoaNaLista(pessoa) {
+  const container = document.getElementById("lista");
+  let ul = container.querySelector("ul");
+
+  if (!ul) {
+    ul = document.createElement("ul");
+    container.appendChild(ul);
+  }
+
+  const li = document.createElement("li");
+  li.textContent = `NOME: ${pessoa.nome}  -- ${pessoa.login}`;
+  ul.appendChild(li);
+}
+  </script>
+</body>
+</html>
