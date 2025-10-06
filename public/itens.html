@@ -5,13 +5,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home</title>
+  <link rel="stylesheet" href="style.css"/>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 30px;
       background-color: #f9f9f9;
       color: #333;
+      text-align: center;
     }
+    
   </style>
 </head>
 
@@ -47,6 +50,11 @@
     </form>
   </center>
 
+  <div id="pessoaPorId">
+    <!-- div para ver pessoa selecionada -->
+    <strong>Selecione uma pessoa para ver os detalhes</strong>
+  </div>
+
   <script>
     async function carregarPessoas() {
       const response = await fetch("/pessoas");
@@ -61,7 +69,6 @@
 
       const container = document.getElementById("lista");
       const ul = document.createElement("ul");
-      ul.style.border = "1px solid black";
 
       for (let c = 0; c < pessoas.length; c++) {
         const pessoa = pessoas[c];
@@ -70,6 +77,7 @@
         const li = document.createElement("li");
 
         const span = document.createElement("span");
+        span.onclick = () => selecionarPessoa(pessoa.id, li);
         span.textContent = texto;
 
         const botao = document.createElement("button");
@@ -130,6 +138,7 @@
       li.textContent = `NOME: ${pessoa.nome}  -- ${pessoa.login}`;
 
       const span = document.createElement("span");
+      span.onclick = () => selecionarPessoa(pessoa.id, li);
 
       const botao = document.createElement("button");
       botao.onclick = () => deletarPessoa(pessoa.id, li);
@@ -141,7 +150,7 @@
       ul.appendChild(li);
     }
 
-    async function deletarPessoa(id, li) {     
+    async function deletarPessoa(id, li) {
       const response = await fetch(`/pessoas/${id}`, {
         method: "DELETE"
       })
@@ -150,8 +159,34 @@
         alert("Pessoa deletada com sucesso!");
         li.remove()
       }
-      else{
-       alert("Erro ao deletar a pessoa");}
+      else {
+        alert("Erro ao deletar a pessoa");
+      }
+    };
+
+    async function selecionarPessoa(id, li) {
+      const response = await fetch(`/pessoas/${id}`, {
+        method: "GET",
+      });
+      const pessoaPorId = document.getElementById("pessoaPorId");
+      const pessoa = await response.json();
+      if (response.ok) {
+        //  alert("Pessoa selecionada com sucesso!");
+        console.log(pessoa)
+      }
+      else {
+        alert("Erro ao selecionar a pessoa");
+      }
+
+      pessoaPorId.innerHTML =
+        `<h4> Detalhes da pessoa </h4>
+       <p><h5>ID: ${pessoa.id}</h5></p>
+       <p><h5>Nome: ${pessoa.nome}</h5></p>
+       <p><h5>Login: ${pessoa.login}</h5></p>
+       <p><h5>Idade: ${pessoa.idade}</h5></p>
+       <p><h5>Irmãos: ${pessoa.irmaos}</h5></p>
+       <p><h5>Cidade: ${pessoa.cidade}</h5></p>
+       <p><h5>Hobby: ${pessoa.hobby}</h5></p>`;
     }
   </script>
 </body>

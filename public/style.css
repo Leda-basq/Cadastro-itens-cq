@@ -1,0 +1,23 @@
+
+li:hover{
+    background-color: rgba(253, 165, 227, 0.685);
+    cursor: pointer;
+    transform: translateX(3px);
+}
+li{
+    background-color: rgb(243, 213, 233);
+    margin: 8px 0px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+#pessoaPorId{
+    background-color: rgb(243, 213, 233);
+    margin: 8px 0px;
+    padding: 12px 15px;
+}

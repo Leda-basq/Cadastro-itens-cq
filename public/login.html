@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Itens</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css"/>
     <style>
       input {
         padding: 8px;
@@ -12,9 +13,19 @@
         font-size: 15px;
         color: gray
       }
+      body{
+        font-family: Arial, sans-serif;
+        color: #333;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+      }
+      label{
+        color: #242323;
+      }
     </style>
   </head>
-  <body>
+  <body class="bodyLogin">
     <h1>Listagem de pessoas</h1>
     <form action="/login" method="POST">
       <label>Login:</label>

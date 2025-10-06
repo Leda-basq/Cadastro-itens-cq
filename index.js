@@ -6,6 +6,7 @@ const app = express();
 const PORT = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, './public')));
 
 const publicDir = path.join(__dirname, './public');
 
@@ -148,7 +149,7 @@ app.put("/pessoas/:id", (req, res) => {
         .json({
           status: 404,
           error: "NOT_FOUND",
-          message: "informações não encontradas",
+          message: "informações não encontradas"
         });
     }
   
@@ -170,6 +171,20 @@ app.put("/pessoas/:id", (req, res) => {
   
     console.log("Usuários: ", pessoas);
     res.json(pessoas);
+  });
+
+  app.get("/pessoas/:id", (req,res) => {
+    const id = parseInt(req.params.id);
+    const pessoa = pessoas.find((u) => u.id === id);
+
+    if(!pessoa){
+        return res .status(404)
+        .json({
+          status: 404,
+          error: "NOT_FOUND",
+          message: "Usuário não encontrado"})
+    }
+    res.json(pessoa);
   });
 
 app.listen(PORT, () => {
